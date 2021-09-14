@@ -4,6 +4,8 @@ import Menu from '../../components/menu'
 
 import { Container, Conteudo } from './styled'
 
+import Api from '../../service/api';
+const api = new Api();
 
 export default function Index() {
     return (
