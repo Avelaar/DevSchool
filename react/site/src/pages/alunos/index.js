@@ -77,36 +77,6 @@ export default function Index() {
                                     <td> <button> <img src="/assets/images/trash.svg" alt="" /> </button> </td>
                                 </tr>
                             
-                                <tr class="linha-alternada">
-                                    <td> 1 </td>
-                                    <td> Fulao da Silva Sauro</td>
-                                    <td> 16 </td>
-                                    <td> InfoX </td>
-                                    <td> Informática </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-
-                                <tr>
-                                    <td> 1 </td>
-                                    <td> Fulao da Silva Sauro</td>
-                                    <td> 17 </td>
-                                    <td> InfoX </td>
-                                    <td> Informática </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-
-                                <tr class="linha-alternada">
-                                    <td> 1 </td>
-                                    <td> Fulao da Silva Sauro</td>
-                                    <td> 18 </td>
-                                    <td> InfoX </td>
-                                    <td> Informática </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                
                             </tbody> 
                         </table>
                     </div>
