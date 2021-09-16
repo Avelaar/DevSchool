@@ -33,10 +33,10 @@ app.post('/matricula', async (req, resp) => {
             return resp.send({ erro: 'Campos em branco'});
 
         if(chamada <= 0 || chamada != Number(chamada))
-            return resp.send({ erro: 'Chamada não pode ser negativa'});
+            return resp.send({ erro: 'Numero de chamada não existe'});
             
         if(b != null)
-            return resp.send({ erro: 'Numero de chamada existente!'})
+            return resp.send({ erro: 'Numero de chamada e turma já existente!'})
 
         let r = await db.tb_matricula.create({
             nm_aluno: nome,
