@@ -2,9 +2,17 @@
 import Cabecalho from '../../components/cabecalho'
 import Menu from '../../components/menu'
 
-import { Container, Conteudo } from './styled'
+import { Container, Conteudo } from './styled';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
+import LoadingBar from 'react-top-loading-bar';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Api from '../../service/api';
 const api = new Api();
@@ -16,26 +24,39 @@ export default function Index() {
     const [chamada, setChamada] = useState('');
     const [turma, setTurma] = useState('');
     const [curso, setCurso] = useState('');
-    const [idAlterando, setIdAlterando] = useState(0); 
+    const [idAlterando, setIdAlterando] = useState(0);
+    let loading = useRef(null);
 
     async function listar () {
+        loading.current.continuousStart();
         let r = await api.listar();
         setAlunos(r);
+        loading.current.complete();
     }
 
     async function inserir() {
+        loading.current.continuousStart();
 
         if (idAlterando == 0) {
         let r = await api.inserir(nome, chamada, curso, turma);
-        alert('Aluno inserido!');
+
+        if (r.erro) 
+            alert(r.erro);
+        else
+            alert('Aluno inserido!');
 
         } else {
             let r = await api.alterar(idAlterando, nome, chamada, curso, turma);
+
+        if (r.erro) 
+            alert(r.erro);
+        else
             alert('Aluno alterado!');
         }
 
         limparCampos();
         listar();
+        loading.current.complete();
     }
 
     function limparCampos () {
@@ -47,10 +68,32 @@ export default function Index() {
     }
 
     async function remover(id) {
-        let r = await api.remover(id);
-        alert('Aluno removido');
+        loading.current.continuousStart();
+        
+        confirmAlert({
+            title: 'Remover aluno',
+            message: `Tem certeza que quer remover o aluno ${id} ?`,
+            buttons: [
+                {
+                    label: 'Sim',
+                    onClick: async() => {
+                        let r = await api.remover(id);
+                        if(r.erro){
+                            toast.error(`${r.erro}`);
+                        } else {
+                            toast.dark('Aluno removido')
+                            listar();
+                        }
+                    }
+                },
+                {
+                    label: 'Não'
+                }
+            ]
+        })
 
         listar();
+        loading.current.complete();
     }
 
     async function editar(item) {
@@ -59,6 +102,7 @@ export default function Index() {
         setCurso(item.nm_curso);
         setTurma(item.nm_turma);
         setIdAlterando(item.id_matricula);
+
     }
 
     // função chamada uma vez quando a tela abre
@@ -68,6 +112,8 @@ export default function Index() {
 
         return (
         <Container>
+            <ToastContainer />
+            <LoadingBar color='#f11946' ref={loading} />
             <Menu />
             <Conteudo>
                 <Cabecalho />
@@ -130,12 +176,16 @@ export default function Index() {
 
                                 <tr className={i % 2 == 0 ? "linha-alternada" : ""}>
                                     <td> {item.id_matricula} </td>
-                                    <td> {item.nm_aluno}</td>
+                                    <td title={item.nm_aluno}> 
+                                    {item.nm_aluno != null && item.nm_aluno.length >= 25 
+                                                ? item.nm_aluno.substr(0, 25) + '...' 
+                                                : item.nm_aluno }
+                                    </td>
                                     <td> {item.nr_chamada}</td>
                                     <td> {item.nm_turma}</td>
                                     <td> {item.nm_curso}</td>
-                                    <td className="coluna-=acao"> <button onClick={() => editar(item) }> <img src="/assets/images/edit.svg" alt="" /> </button> </td>
-                                    <td className="coluna-=acao"> <button onClick={() => remover(item.id_matricula) }> <img src="/assets/images/trash.svg" alt="" /> </button> </td>
+                                    <td className="coluna-acao"> <button onClick={() => editar(item) }> <img src="/assets/images/edit.svg" alt="" /> </button> </td>
+                                    <td className="coluna-acao"> <button onClick={() => remover(item.id_matricula) }> <img src="/assets/images/trash.svg" alt="" /> </button> </td>
                                 </tr>
                             
                                 )}
