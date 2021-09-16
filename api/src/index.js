@@ -20,6 +20,24 @@ app.post('/matricula', async (req, resp) => {
 
         let {nome, chamada, curso, turma} = req.body;
 
+        let a = req.body;
+        let b = await db.tb_matricula.findOne({ where: { nm_turma: a.turma, nr_chamada: a.chamada }});
+
+        if(!/./.test(nome))
+            return resp.send({ erro: 'Campos em branco'});
+        if(!/./.test(chamada))
+            return resp.send({ erro: 'Campos em branco'});
+        if(!/./.test(curso))
+            return resp.send({ erro: 'Campos em branco'});
+        if(!/./.test(turma))
+            return resp.send({ erro: 'Campos em branco'});
+
+        if(chamada <= 0 || chamada != Number(chamada))
+            return resp.send({ erro: 'Chamada não pode ser negativa'});
+            
+        if(b != null)
+            return resp.send({ erro: 'Numero de chamada existente!'})
+
         let r = await db.tb_matricula.create({
             nm_aluno: nome,
             nr_chamada: chamada,
