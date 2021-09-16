@@ -122,7 +122,7 @@ export default function Index() {
                         
                         <div class="text-new-student">
                             <div class="bar-new-student"></div>
-                            <div class="text-new-student"> {idAlterando === 0 ? "Novo Aluno" : "Alterando Aluno" + idAlterando } </div>
+                            <div class="text-new-student"> {idAlterando === 0 ? "Novo Aluno" : "Alterando Aluno " + idAlterando } </div>
                         </div>
 
                         <div class="input-new-student"> 
